@@ -1,9 +1,16 @@
 // Content script: Tự động chọn đáp án đúng trên trang quiz Udemy
 
 function autoSelectAnswers(answersData) {
-  if (!answersData || !Array.isArray(answersData)) return;
+  if (!answersData || !Array.isArray(answersData)) {
+    console.error('❌ [Extension] No answers data provided');
+    return { selected: 0, total: 0 };
+  }
+
+  let selectedCount = 0;
+  let totalQuestions = 0;
 
   document.querySelectorAll('form[data-testid="mc-quiz-question"]').forEach((form) => {
+    totalQuestions++;
     
     // 1. Lấy text câu hỏi trên trang
     const questionElement = form.querySelector('.mc-quiz-question--question-prompt--9cMw2');
@@ -16,10 +23,14 @@ function autoSelectAnswers(answersData) {
       return apiText === questionTextOnPage;
     });
     
-    if (!matched || !matched.correct_response) return;
+    if (!matched || !matched.correct_response) {
+      console.warn(`⚠️ [Extension] Không tìm thấy đáp án cho: ${questionTextOnPage.substring(0, 50)}...`);
+      return;
+    }
     
     // 3. Thực hiện click vào đáp án đúng
     const letters = ['a', 'b', 'c', 'd', 'e', 'f'];
+    let questionSelected = false;
     
     matched.correct_response.forEach((correctLetter) => {
       const ansIdx = letters.indexOf(correctLetter);
@@ -30,19 +41,39 @@ function autoSelectAnswers(answersData) {
           const input = answerLis[ansIdx].querySelector('input[type="radio"], input[type="checkbox"]');
           if (input && !input.checked) { 
               input.click();
+              questionSelected = true;
               console.log(`✅ [Extension] Đã chọn đáp án ${correctLetter.toUpperCase()} cho câu hỏi: ${questionTextOnPage.substring(0, 50)}...`);
           }
         }
       }
     });
+    
+    if (questionSelected) {
+      selectedCount++;
+    }
   });
+
+  console.log(`🎯 [Extension] Đã tự động chọn ${selectedCount}/${totalQuestions} câu hỏi`);
+  return { selected: selectedCount, total: totalQuestions };
 }
 
 // Lắng nghe lệnh từ Service Worker (thông qua chrome.tabs.sendMessage)
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.type === 'autoSelectAnswers' && Array.isArray(msg.answers)) {
-    autoSelectAnswers(msg.answers);
-    sendResponse({ success: true, message: "Hoàn tất tự động chọn đáp án." });
+    try {
+      const result = autoSelectAnswers(msg.answers);
+      sendResponse({ 
+        success: true, 
+        message: `Đã chọn ${result.selected}/${result.total} câu hỏi`,
+        selected: result.selected,
+        total: result.total
+      });
+    } catch (error) {
+      sendResponse({ 
+        success: false, 
+        message: "Lỗi: " + error.message 
+      });
+    }
     return true; 
   }
 });

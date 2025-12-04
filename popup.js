@@ -88,7 +88,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 window.addEventListener('DOMContentLoaded', function() {
   
   const scanBtn = document.getElementById('scanApiBtn');
-  // const autoBtn = document.getElementById('autoSelectBtn'); // Không còn dùng nút này trong HTML mới
+  const autoFillBtn = document.getElementById('autoFillBtn');
   const resultDiv = document.getElementById('apiResult');
 
   // Lấy các khu vực giao diện mới
@@ -111,6 +111,8 @@ window.addEventListener('DOMContentLoaded', function() {
       
       resultDiv.innerHTML = '<div class="status-info scanning">Đang lấy kết quả...</div>';
       lastFetchedQuestions = []; // Reset dữ liệu
+      // Hide auto-fill button while fetching
+      autoFillBtn.classList.add('hidden');
 
       try {
         const result = await new Promise((resolve, reject) => {
@@ -135,18 +137,89 @@ window.addEventListener('DOMContentLoaded', function() {
         });
         
         lastFetchedQuestions = result.questions || [];
-        displayResults(result); 
+        displayResults(result);
+        
+        // Show auto-fill button after successful fetch
+        if (lastFetchedQuestions.length > 0) {
+          autoFillBtn.classList.remove('hidden');
+        }
         
       } catch (e) {
         resultDiv.textContent = 'Lỗi: ' + e.message;
+        autoFillBtn.classList.add('hidden');
       }
     });
   }
   
-  // Logic Tự động chọn đáp án (Không cần nút, logic này sẽ được kích hoạt bởi một hành động khác nếu cần,
-  // hoặc bị loại bỏ nếu không dùng)
-  /* if (autoBtn) {
-    // ... logic cũ ...
-  } 
-  */
+  // Logic Tự động làm Quiz
+  if (autoFillBtn) {
+    autoFillBtn.addEventListener('click', async function() {
+      if (!lastFetchedQuestions || lastFetchedQuestions.length === 0) {
+        alert('Vui lòng lấy đáp án trước!');
+        return;
+      }
+
+      // Disable button and show processing state
+      autoFillBtn.disabled = true;
+      autoFillBtn.classList.add('processing');
+      const originalText = autoFillBtn.innerHTML;
+      autoFillBtn.innerHTML = '<span class="material-icons">hourglass_empty</span><span>Đang xử lý...</span>';
+
+      try {
+        // Get the active tab to send message to
+        const tabs = await chrome.tabs.query({ active: true, currentWindow: false });
+        let quizTab = tabs.find(tab => tab.url && tab.url.includes('udemy.com/course/') && tab.url.includes('/quiz/'));
+        
+        if (!quizTab) {
+          // Fallback: try to find any Udemy quiz tab
+          const allTabs = await chrome.tabs.query({});
+          quizTab = allTabs.find(tab => tab.url && tab.url.includes('udemy.com/course/') && tab.url.includes('/quiz/'));
+        }
+
+        if (!quizTab) {
+          throw new Error('Không tìm thấy tab Udemy Quiz đang mở!');
+        }
+
+        // Send message through background service worker
+        const result = await new Promise((resolve, reject) => {
+          const port = chrome.runtime.connect({ name: "quizScanner" });
+          
+          port.onMessage.addListener((msg) => {
+            if (msg.success) {
+              resolve(msg);
+            } else {
+              reject(new Error(msg.error));
+            }
+            port.disconnect();
+          });
+          
+          port.onDisconnect.addListener(() => {
+            if (chrome.runtime.lastError) {
+              reject(new Error("Mất kết nối với Service Worker."));
+            }
+          });
+          
+          port.postMessage({ 
+            type: 'autoSelectAnswers', 
+            answers: lastFetchedQuestions,
+            activeTabId: quizTab.id
+          });
+        });
+
+        // Success feedback
+        autoFillBtn.innerHTML = '<span class="material-icons">check_circle</span><span>Hoàn tất!</span>';
+        setTimeout(() => {
+          autoFillBtn.innerHTML = originalText;
+          autoFillBtn.classList.remove('processing');
+          autoFillBtn.disabled = false;
+        }, 2000);
+
+      } catch (error) {
+        alert('Lỗi: ' + error.message);
+        autoFillBtn.innerHTML = originalText;
+        autoFillBtn.classList.remove('processing');
+        autoFillBtn.disabled = false;
+      }
+    });
+  }
 });

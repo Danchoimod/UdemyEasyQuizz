@@ -159,4 +159,46 @@ html, body {
 
 .hidden { display: none !important; }
 
+/* Auto Fill Button */
+.auto-fill-btn {
+    width: 100%;
+    padding: 14px 20px;
+    margin-top: 16px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.4, 1);
+}
+
+.auto-fill-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.auto-fill-btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.auto-fill-btn.processing {
+    background: #6b7280;
+    cursor: not-allowed;
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
 @keyframes scanning { 0%,100% {opacity:0.7} 50% {opacity:1} }
