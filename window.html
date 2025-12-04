@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Udemy Easy Quizz</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Một chút style bổ sung chỉ dành cho màn hình chào */
+    .welcome-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      text-align: center;
+      padding: 40px 30px;
+      color: #1c1c1e;
+    }
+
+    .welcome-icon {
+      font-size: 88px;
+      margin-bottom: 24px;
+      background: linear-gradient(135deg, #0078d4, #1091f4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .welcome-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(90deg, #005a9e, #0078d4);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .welcome-desc {
+      font-size: 16px;
+      line-height: 1.6;
+      color: #555;
+      max-width: 420px;
+      margin-bottom: 40px;
+    }
+
+    .welcome-gif {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+      margin-bottom: 32px;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-16px); }
+    }
+
+    /* Khi đang quét thì ẩn màn hình chào */
+    #resultView:not(.hidden) ~ #initialView .welcome-screen,
+    .scanning ~ .welcome-screen {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="popup-container">
+    <h1 class="popup-title">Udemy Easy Quizz  </h1>
+    
+    <!-- ==================== MÀN HÌNH CHÍNH (ĐẸP) ==================== -->
+    <div id="initialView" class="initial-view-wrapper">
+      
+      <!-- Phần nhập Quiz ID (vẫn giữ nguyên để JS hoạt động) -->
+      <div id="quiz-info-hidden" style="display:none;">
+          <div id="quiz-id">Quiz ID: <span id="currentQuizId">Chưa có</span></div>
+          <input type="text" id="quizIdInput" class="input-quiz" placeholder="Nhập Quiz ID hoặc URL">
+      </div>
+
+      <!-- Màn hình chào mới cực chất -->
+      <div class="welcome-screen">
+
+
+        <div class="welcome-icon material-icons">auto_awesome</div>
+        
+        <h2 class="welcome-title">Tìm đáp án chỉ trong 1 nốt nhạc!</h2>
+        
+        <p class="welcome-desc">
+          giúp bạn nhận ngay toàn bộ đáp án chính xác 100%.
+        </p>
+      </div>
+
+      <!-- FAB vẫn ở đây, không thay đổi gì -->
+      <button id="scanApiBtn" class="fab-btn" title="Nhận đáp án">
+        <span class="material-icons">auto_awesome</span>
+      </button>
+    </div>
+    
+    <!-- Màn hình kết quả (giữ nguyên) -->
+    <div id="resultView" class="result-view-wrapper hidden">
+        <div id="apiResult" class="result-area">
+          <div class="status-info scanning">Đang dò API...</div>
+        </div>
+    </div>
+    
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Udemy Easy Quizz",
+  "version": "1.0",
+  "description": "Nhận đáp án của quizz udemy.",
+  "icons": {
+    "16": "icon16.png",
+    "48": "icon48.png"
+  },
+  "action": {
+      "default_icon": {
+        "16": "icon16.png"
+      },
+      "default_title": "Mở cửa sổ "
+  },
+  "background": {
+    "service_worker": "background.js" 
+  },
+  "host_permissions": [
+    "https://fpl.udemy.com/*",
+    "https://www.udemy.com/*" 
+  ],
+  "permissions": [
+    "alarms",
+    "tabs",
+    "activeTab",
+    "scripting", 
+    "windows",
+    "system.display"  
+  ],
+  "content_scripts": [
+    {
+      "matches": ["https://www.udemy.com/course/*/quiz/*"],
+      "js": ["content-script.js"] 
+    }
+  ]
+}

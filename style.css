@@ -1,0 +1,162 @@
+/* ====================== WINDOWS 11 LIGHT + MACOS-STYLE SILVER FAB ====================== */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+    height: 100%;
+    font-family: "Segoe UI Variable", "Segoe UI", sans-serif;
+    font-size: 14px;
+    background: #f3f3f4;
+    color: #000000;
+}
+
+/* Google Material Icons */
+.material-icons {
+    font-family: 'Material Icons';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.popup-container {
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.05);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Title bar */
+.popup-title {
+    background: rgba(255, 255, 255, 0.7);
+    color: #000000;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 14px 16px 12px;
+    user-select: none;
+    -webkit-app-region: drag;
+    border-bottom: 1px solid rgba(0,0,0,0.07);
+    position: relative;
+    z-index: 10;
+}
+
+.popup-title::after:hover { background: rgba(0,0,0,0.1); }
+
+/* Nội dung */
+.initial-view-wrapper,
+.result-view-wrapper {
+    flex: 1;
+    padding: 20px;
+    padding-bottom: 90px; /* chừa chỗ cho FAB */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* ==================== FAB MÀU BẠC KIỂU MACOS ==================== */
+.fab-btn {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 68px;
+    height: 68px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 
+        0 8px 28px rgba(0, 0, 0, 0.14),
+        0 2px 8px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    transition: all 0.25s cubic-bezier(0.2, 0.8, 0.4, 1);
+    color: #222222;
+    font-size: 28px;
+}
+
+.fab-btn:hover {
+    transform: translateY(-6px) scale(1.08);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 
+        0 16px 36px rgba(0, 0, 0, 0.18),
+        0 4px 12px rgba(0, 0, 0, 0.14),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.fab-btn:active {
+    transform: translateY(-2px) scale(1.02);
+    background: rgba(240, 240, 245, 0.9);
+}
+
+/* Khi đang quét – xoay icon */
+.fab-btn.scanning .material-icons {
+    animation: spin 1.4s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Các phần còn lại giữ nguyên đẹp như cũ */
+.input-quiz, .result-area, .status-info, etc { /* giữ nguyên như cũ */ }
+
+/* Input, result-area, scrollbar... (giữ nguyên phần cũ của bạn) */
+.input-quiz {
+    width: 100%; padding: 12px 14px; background: #ffffff;
+    border: 1px solid rgba(0,0,0,0.15); border-radius: 10px;
+    color: #000000; font-size: 14px; margin-bottom: 16px;
+    transition: all 0.2s;
+}
+.input-quiz::placeholder { color: rgba(0,0,0,0.5); }
+.input-quiz:focus {
+    outline: none; border-color: #0078d4;
+    box-shadow: 0 0 0 3px rgba(0,120,215,0.2);
+}
+
+.result-area {
+    flex: 1; background: #ffffff; border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 12px; padding: 16px; margin-top: 8px;
+    overflow-y: auto; -webkit-overflow-scrolling: touch;
+    line-height: 1.6; box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+/* Các khối nhỏ */
+.result-area > div, .status-info, .status-success, .status-error {
+    background: #f9f9f9; border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px; padding: 10px 12px; margin-bottom: 10px;
+}
+
+.answer-correct, .answer-green {
+    color: #107c10 !important; background: #e6f4ea !important;
+    border: 1px solid #a8d6b0; border-radius: 8px;
+    padding: 6px 10px !important; font-weight: 600;
+}
+
+.status-info.scanning {
+    background: #e5f1ff; color: #005a9e; border: 1px solid #99ccff;
+    animation: scanning 1.6s infinite;
+}
+
+.hidden { display: none !important; }
+
+@keyframes scanning { 0%,100% {opacity:0.7} 50% {opacity:1} }
