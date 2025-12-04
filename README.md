@@ -1,7 +1,7 @@
 # 🚀 Udemy Easy Quizz
 
 <div align="center">
-  <img src="icon128.png" alt="Udemy Easy Quizz" width="128"/>
+  <img src="assets/logo.png" alt="Udemy Easy Quizz" width="128"/>
   
   ### Tiện ích Chrome lấy đáp án Quiz Udemy chính xác 100%
   
@@ -101,39 +101,6 @@ QuizPaginationFetcher.createCheatSheet();
 // Export JSON và copy vào clipboard
 QuizPaginationFetcher.exportJSON();
 ```
-
----
-
-## 🖼️ Giao Diện Demo
-
-### 📱 Popup Extension
-
-<div align="center">
-  <img src="screenshots/popup-main.png" alt="Popup chính" width="400"/>
-  <p><em>Giao diện popup với thiết kế hiện đại</em></p>
-</div>
-
-### ✅ Hiển thị đáp án
-
-<div align="center">
-  <img src="screenshots/answers-display.png" alt="Hiển thị đáp án" width="400"/>
-  <p><em>Đáp án đúng được highlight màu xanh</em></p>
-</div>
-
-### 🔧 Chế độ tự động
-
-<div align="center">
-  <img src="screenshots/auto-select.png" alt="Tự động chọn" width="400"/>
-  <p><em>Tự động tick đáp án đúng trên trang quiz</em></p>
-</div>
-
-### 💻 Console Script
-
-<div align="center">
-  <img src="screenshots/console-output.png" alt="Console output" width="500"/>
-  <p><em>Kết quả từ Console Script</em></p>
-</div>
-
 ---
 
 ## 📂 Cấu Trúc Dự Án
