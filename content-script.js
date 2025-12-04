@@ -17,6 +17,11 @@ function autoSelectAnswers(answersData) {
     if (!questionElement) return;
     const questionTextOnPage = questionElement.innerText.trim();
     
+    if (!questionTextOnPage) {
+      console.warn('⚠️ [Extension] Không thể đọc text câu hỏi');
+      return;
+    }
+    
     // 2. Tìm câu hỏi tương ứng trong dữ liệu API
     const matched = answersData.find(q => {
       const apiText = q.prompt?.question?.replace(/<[^>]*>/g, '').trim();
@@ -24,7 +29,8 @@ function autoSelectAnswers(answersData) {
     });
     
     if (!matched || !matched.correct_response) {
-      console.warn(`⚠️ [Extension] Không tìm thấy đáp án cho: ${questionTextOnPage.substring(0, 50)}...`);
+      const previewText = questionTextOnPage.length > 50 ? questionTextOnPage.substring(0, 50) + '...' : questionTextOnPage;
+      console.warn(`⚠️ [Extension] Không tìm thấy đáp án cho: ${previewText}`);
       return;
     }
     
@@ -42,7 +48,8 @@ function autoSelectAnswers(answersData) {
           if (input && !input.checked) { 
               input.click();
               questionSelected = true;
-              console.log(`✅ [Extension] Đã chọn đáp án ${correctLetter.toUpperCase()} cho câu hỏi: ${questionTextOnPage.substring(0, 50)}...`);
+              const previewText = questionTextOnPage.length > 50 ? questionTextOnPage.substring(0, 50) + '...' : questionTextOnPage;
+              console.log(`✅ [Extension] Đã chọn đáp án ${correctLetter.toUpperCase()} cho câu hỏi: ${previewText}`);
           }
         }
       }

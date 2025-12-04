@@ -166,18 +166,14 @@ window.addEventListener('DOMContentLoaded', function() {
       autoFillBtn.innerHTML = '<span class="material-icons">hourglass_empty</span><span>Đang xử lý...</span>';
 
       try {
-        // Get the active tab to send message to
-        const tabs = await chrome.tabs.query({ active: true, currentWindow: false });
-        let quizTab = tabs.find(tab => tab.url && tab.url.includes('udemy.com/course/') && tab.url.includes('/quiz/'));
+        // Get the quiz tab - since the extension window is a popup, we need to find the Udemy quiz tab
+        // First try all tabs since the popup is not in the same window as the quiz
+        const allTabs = await chrome.tabs.query({});
+        let quizTab = allTabs.find(tab => tab.url && tab.url.includes('udemy.com/course/') && tab.url.includes('/quiz/'));
         
         if (!quizTab) {
-          // Fallback: try to find any Udemy quiz tab
-          const allTabs = await chrome.tabs.query({});
-          quizTab = allTabs.find(tab => tab.url && tab.url.includes('udemy.com/course/') && tab.url.includes('/quiz/'));
-        }
-
-        if (!quizTab) {
           throw new Error('Không tìm thấy tab Udemy Quiz đang mở!');
+        }
         }
 
         // Send message through background service worker
