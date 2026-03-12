@@ -73,23 +73,20 @@
     <!-- ==================== MÀN HÌNH CHÍNH (ĐẸP) ==================== -->
     <div id="initialView" class="initial-view-wrapper">
       
-      <!-- Phần nhập Quiz ID (vẫn giữ nguyên để JS hoạt động) -->
-      <div id="quiz-info-hidden" style="display:none;">
-          <div id="quiz-id">Quiz ID: <span id="currentQuizId">Chưa có</span></div>
-          <input type="text" id="quizIdInput" class="input-quiz" placeholder="Nhập Quiz ID hoặc URL">
-      </div>
-
       <!-- Màn hình chào mới cực chất -->
       <div class="welcome-screen">
-
-
         <div class="welcome-icon material-icons">auto_awesome</div>
         
         <h2 class="welcome-title">Tìm đáp án chỉ trong 1 nốt nhạc!</h2>
         
         <p class="welcome-desc">
-          giúp bạn nhận ngay toàn bộ đáp án chính xác 100%.
+          Nhập Quiz ID bên dưới hoặc nhấn nút quét để nhận ngay toàn bộ đáp án chính xác 100%.
         </p>
+
+        <div class="quiz-input-container">
+          <input type="text" id="quizIdInput" class="input-quiz" placeholder="Nhập Quiz ID (ví dụ: 123456)">
+          <div id="quiz-id" class="quiz-id-display">Quiz ID hiện tại: <span id="currentQuizId">Chưa có</span></div>
+        </div>
       </div>
 
       <!-- FAB vẫn ở đây, không thay đổi gì -->

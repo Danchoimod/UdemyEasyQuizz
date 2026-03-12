@@ -95,9 +95,19 @@ window.addEventListener('DOMContentLoaded', function() {
   const initialView = document.getElementById('initialView');
   const resultView = document.getElementById('resultView');
 
-  // Logic Dò API Quiz (Sử dụng Connect/Port)
-  if (scanBtn) {
+if (scanBtn) {
     scanBtn.addEventListener('click', async function() {
+      // Ưu tiên lấy ID từ input nếu người dùng đã nhập
+      const inputId = document.getElementById('quizIdInput').value.trim();
+      if (inputId) {
+          document.getElementById('currentQuizId').textContent = inputId;
+      }
+      
+      const currentId = document.getElementById('currentQuizId').textContent;
+      if (!currentId || currentId === 'Chưa có') {
+          alert('Vui lòng nhập Quiz ID hoặc mở bài trắc nghiệm trên Udemy để tự động lấy ID.');
+          return;
+      }
       const quizId = document.getElementById('quizIdInput').value.trim();
       
       // Ẩn view ban đầu và hiển thị view kết quả
